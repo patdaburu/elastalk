@@ -127,7 +127,7 @@ class ElastalkConnection(object):
             blob_key: _encode(blob_)
         }
 
-    def unpack(self, doc: Dict, index:str = None) -> Dict:
+    def unpack(self, doc: Dict, index: str = None) -> Dict:
         """
         Convert a :py:func:`packed <pack>` document to its original form.
 

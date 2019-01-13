@@ -13,6 +13,7 @@ import importlib
 import json
 import os
 from pathlib import Path
+import uuid
 import toml
 from typing import Iterable, Dict, Set
 from dataclasses import dataclass, field
@@ -28,7 +29,7 @@ class BlobConf:
     Define blobbing parameters.
     """
     #: indicates whether or not blobbing is enabled.
-    enabled: bool = False  #: Is blobbing enabled?
+    enabled: bool = None  #: Is blobbing enabled?
 
     #: the excluded top-level document keys
     excluded: Set[str] = field(default_factory=set)
@@ -42,11 +43,7 @@ class BlobConf:
 
         :param keys: the excluded document keys
         """
-        for key in keys:
-            try:
-                self.excluded.add(key)
-            except AttributeError:
-                self.excluded = {key}
+        self.excluded.update(keys)
 
     @classmethod
     def load(cls, dict_: Dict) -> 'BlobConf' or None:
@@ -165,7 +162,7 @@ class ElastalkConf:
     )  #: index-specific configurations
 
     @lru_cache(maxsize=128)
-    def blobs_enabled(self, index: str = None):
+    def blobs_enabled(self, index: str = None) -> bool:
         """
         Determine whether or not blobbing is enabled for an index.
 
@@ -173,9 +170,16 @@ class ElastalkConf:
         :return: `True` if blobbing is enabled, otherwise `False`
         """
         try:
-            return self.indexes[index].blobs.enabled
+            # Get the value configured for the index.
+            idx_value = self.indexes[index].blobs.enabled
+            # If the index has a configured value, use it.  Otherwise use the
+            # global version.
+            if idx_value is not None:
+                return idx_value
         except KeyError:
-            return self.blobs.enabled
+            pass
+        # If we got to this point, just return the configured value.
+        return False if self.blobs.enabled is None else self.blobs.enabled
 
     @lru_cache(maxsize=128)
     def blob_exclusions(self, index: str = None) -> Set[str]:
@@ -292,12 +296,26 @@ class ElastalkConf:
 
         # Load the top-level configuration values.
         for att in [
-            'sniff_on_start',
-            'sniff_on_connection_fail',
-            'sniffer_timeout',
-            'maxsize',
-            'mapping_field_limit'
+                'sniff_on_start',
+                'sniff_on_connection_fail',
+                'sniffer_timeout',
+                'maxsize',
+                'mapping_field_limit'
         ]:
             value = _toml.get(att)
             if value is not None:
                 setattr(self, att, value)
+
+    def __hash__(self):
+        try:
+            return getattr(self, '_hash')
+        except AttributeError:
+            hsh = uuid.uuid4().int
+            setattr(self, '_hash', hsh)
+            return hsh
+
+    def __eq__(self, other):
+        return self.__hash__() == hash(other) if other else False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

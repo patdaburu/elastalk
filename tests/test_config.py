@@ -42,7 +42,7 @@ def test_blob_conf_defaults():
     Assert:  Default values match expected values.
     """
     bcfg = BlobConf()
-    assert bcfg.enabled is False, \
+    assert not bcfg.enabled, \
         'Blobbing should be disabled.'
     assert bcfg.excluded == set(), \
         'Exclusions should be an empty set.'
@@ -80,13 +80,31 @@ def test_config_from_toml_001():
 
         assert config.indexes['cats'].mappings == "cats/mappings.json", \
             'The path to the mappings document should match the expectation.'
-        assert config.indexes['cats'].blobs.enabled is False, \
+        assert not config.indexes['cats'].blobs.enabled, \
             "Blobbing should be disabled for the 'cats' index."
         assert config.indexes['cats'].blobs.excluded == set(), \
             "The list of exclusions for the 'cats' index should be empty."
+
+        assert config.blobs_enabled(index='cats'), \
+            "Blobbing for the 'cats' index should be enabled per the global " \
+            "configuration."
+
+        assert (
+                config.blob_exclusions(index='cats') == config.blobs.excluded
+        ), "Blobs exclusions for the 'cats' index should match the global " \
+           "exclusions."
 
         assert config.indexes['dogs'].blobs.enabled is True, \
             "Blobbing should be enabled for the 'dogs' index."
         assert config.indexes['dogs'].blobs.excluded == {"name", "breed"}, \
             "The list of blob exclusions for the 'dogs' index should match " \
             "the expectations."
+
+        assert config.blobs_enabled(index='dogs'), \
+            "Blobbing for the 'dogs' index should be enabled."
+
+        assert (
+                config.blob_exclusions(index='dogs') ==
+                config.blobs.excluded | config.indexes['dogs'].blobs.excluded
+        ), "Blobs exclusions for the 'dogs' index should contain the global " \
+           "exclusions and those configured for the index."
