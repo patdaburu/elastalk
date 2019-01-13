@@ -1,0 +1,10 @@
+[blobs]
+enabled = true
+excluded = ["owner_", "group_"]
+
+[indexes.cats]
+mappings = "cats/mappings.json"
+
+[indexes.dogs.blobs]
+enabled = true
+excluded = ["name", "breed"]

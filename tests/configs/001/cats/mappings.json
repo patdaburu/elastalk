@@ -1,0 +1,17 @@
+{
+  "mappings": {
+    "cat": {
+      "properties": {
+        "owner_": {
+          "type": "text"
+        },
+        "group_": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}
