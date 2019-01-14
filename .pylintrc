@@ -264,7 +264,9 @@ good-names=i,
            Run,
            _,
            v,
-           es
+           es,
+           o,
+           t
 
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no

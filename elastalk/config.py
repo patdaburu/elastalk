@@ -11,12 +11,23 @@ Make things work the way you want!
 from functools import lru_cache
 import importlib
 import json
+import logging
 import os
 from pathlib import Path
 import uuid
-import toml
 from typing import Iterable, Dict, Set
+import toml
 from dataclasses import dataclass, field
+
+#: the module logger
+__logger__: logging.Logger = logging.getLogger(__name__)
+
+
+class _Defaults:
+    """
+    Module-level default values.
+    """
+    blob_key: str = '_blob'  #: the default key for blobs
 
 
 class ElasticsearchConfigurationException(Exception):
@@ -29,7 +40,7 @@ class BlobConf:
     Define blobbing parameters.
     """
     #: indicates whether or not blobbing is enabled.
-    enabled: bool = None  #: Is blobbing enabled?
+    enabled: bool = None
 
     #: the excluded top-level document keys
     excluded: Set[str] = field(default_factory=set)
@@ -43,7 +54,7 @@ class BlobConf:
 
         :param keys: the excluded document keys
         """
-        self.excluded.update(keys)
+        self.excluded.update(keys)  # pylint: disable=no-member
 
     @classmethod
     def load(cls, dict_: Dict) -> 'BlobConf' or None:
@@ -95,7 +106,7 @@ class IndexConf:
         mappings_path: Path = Path(self.mappings)
         # If a mapping document *is* defined, but the file doesn't exist...
         if not mappings_path.exists():
-            # TODO: Log this!
+            __logger__.warning(f"{mappings_path} does not exist.")
             return None  # ..there isn't much more we can do.
         # Figure out what the full path to the document is.
         _root = root if root else Path.cwd()
@@ -134,7 +145,7 @@ class IndexConf:
 
 
 @dataclass
-class ElastalkConf:
+class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assignment-operation
     """
     Configuration options for an Elastalk and the Elasticsearch client.
 
@@ -194,7 +205,10 @@ class ElastalkConf:
         if not index:
             return self.blobs.excluded
         try:
-            return self.blobs.excluded | self.indexes[index].blobs.excluded
+            return (
+                self.blobs.excluded |
+                self.indexes[index].blobs.excluded
+            )
         except KeyError:
             return self.blobs.excluded
 
@@ -214,7 +228,7 @@ class ElastalkConf:
         except KeyError:
             pass
         key = key if key else self.blobs.key
-        return key if key else '_blobs'  #: TODO remove magic string
+        return key if key else _Defaults.blob_key
 
     def from_object(self, o: str):
         """
