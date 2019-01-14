@@ -2,18 +2,31 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Type
 import pytest
 from unittest import mock
-from elastalk.config import ElastalkConf, IndexConf, BlobConf
+from elastalk.config import _Defaults, ElastalkConf, IndexConf, BlobConf
 
 
 def get_config(set_: str, name: str = 'config.toml') -> Tuple[Path, str]:
+    """
+    Get the path to a test configuration set.
+
+    :param set_: identifies the set
+    :param name: the name of the configuration file
+    :return: the path
+    """
     path: Path = Path(__file__).parent.resolve() / 'configs' / set_ / name
     return path, path.read_text()
 
 
 def get_config_root(set_: str) -> Path:
+    """
+    Get the path to a test configuration root directory.
+
+    :param set_: identifies the set
+    :return: the path
+    """
     return Path(__file__).parent.resolve() / 'configs' / set_
 
 
@@ -115,6 +128,12 @@ def test_config_from_toml_001():
     for toml in get_config('001'):
         config.from_toml(toml_=toml)
 
+        # Assert: global values
+        assert config.sniff_on_start is False, \
+            '`sniff_on_start` should match the value in the configuration file.'
+        assert config.maxsize == 200, \
+            '`maxsize` should match the value in the configuration file.'
+
         # Assert: global blobbing
         assert config.blobs.enabled is True, \
             'Blobbing should be enabled.'
@@ -169,6 +188,15 @@ def test_config_from_toml_001():
         ), "Blobs exclusions for the 'dogs' index should contain the global " \
            "exclusions and those configured for the index."
 
+        # Assert: mappings for the 'pigs' index
+        assert config.indexes['pigs'].mappings == "pigs/mappings.json", \
+            'The path to the mappings document should match the expectation.'
+        assert config.indexes['pigs'].mappings_document(
+            root=get_config_root('001')
+        ) is None, \
+            'The mapping document should be `None` because the file does not ' \
+            'exist.'
+
 
 def test_blob_conf_excluded_exclude():
     """
@@ -190,3 +218,81 @@ def test_blob_conf_exclude():
     blob_conf = BlobConf()
     blob_conf.exclude('b', 'c', 'd')
     assert blob_conf.excluded == {'b', 'c', 'd'}
+
+
+@pytest.mark.parametrize(
+    'empty', [None, {}]
+)
+def test_index_conf_no_dict(empty):
+    """
+    Arrange/Act: Call `IndexConf.load()` with an empty argument.
+    Assert: The method always returns `None`.
+
+    :param _dict: the empty argument
+    """
+    assert IndexConf.load(empty) is None, "The argument should yield `None`."
+
+
+def test_elastalk_conf_blob_exclusions_no_index():
+    """
+    Arrange: Create an `ElastalkConf`.
+    Act: Call the `blob_exclusions` method with no argument.
+    Assert: The method returns the global set of exclusions.
+    """
+    # Create the configuration.
+    es_cfg = ElastalkConf(
+        blobs=BlobConf(excluded={'a'})
+    )
+    assert es_cfg.blob_exclusions() == es_cfg.blobs.excluded
+
+
+def test_elastalk_conf_blob_exclusions_unconfigured_index():
+    """
+    Arrange: Create an `ElastalkConf`.
+    Act: Call the `blob_exclusions` method and supply an unconfigured index
+        name.
+    Assert: The method returns the global set of exclusions.
+    """
+    # Create the configuration.
+    es_cfg = ElastalkConf(
+        blobs=BlobConf(excluded={'a'})
+    )
+    assert es_cfg.blob_exclusions(
+        index='unconfigured'
+    ) == es_cfg.blobs.excluded, \
+        "An unconfigured index should yield the globally-configured " \
+        "blob exclusions"
+
+
+@pytest.mark.parametrize(
+    'global_key,result',
+    [
+        (None, _Defaults.blob_key),
+        ('test_key', 'test_key')
+    ]
+)
+def test_elastalk_conf_blob_key_unconfigured_index(global_key, result):
+    """
+    Arrange: Create an `Elastalk` configuration.
+    Act:  Call the `blob_key` method and provide an unconfigured index name.
+    Assert:  The method's return value matches the `result` parameter value.
+
+    :param global_key: the global blob key
+    :param result: the expected value for an unconfigured index
+    :return:
+    """
+    es_cfg = ElastalkConf(blobs=BlobConf(key=global_key))
+    assert es_cfg.blob_key(index='unconfigured') == result, \
+        "The value returned from the `blob_key` method should equal the " \
+        "expected result."
+
+
+def test_elastalk_conf_eq_neq():
+    """
+    Arrange: Instantiate two (2) `ElastalkConf` instances.
+    Act:  Compare the instances for inequality.
+    Assert:  The objects are not equal.
+    """
+    one = ElastalkConf()
+    two = ElastalkConf()
+    assert one != two, "The objects should not be equal."

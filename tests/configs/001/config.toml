@@ -1,3 +1,6 @@
+sniff_on_start = false
+maxsize = 200
+
 [blobs]
 enabled = true
 excluded = ["owner_", "group_"]
@@ -8,3 +11,6 @@ mappings = "cats/mappings.json"
 [indexes.dogs.blobs]
 enabled = true
 excluded = ["name", "breed"]
+
+[indexes.pigs]
+mappings = "pigs/mappings.json"

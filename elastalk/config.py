@@ -109,7 +109,7 @@ class IndexConf:
         full_path = (
             mappings_path
             if mappings_path.is_absolute()
-            else (root / mappings_path).resolve()
+            else (_root / mappings_path).resolve()
         )
         # If a mapping document *is* defined, but the file doesn't exist...
         if not full_path.exists():
