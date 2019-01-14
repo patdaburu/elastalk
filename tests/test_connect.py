@@ -4,7 +4,6 @@
 from unittest import mock
 import uuid
 import pytest
-import elastalk.connect
 from elastalk.connect import (
     ElastalkConnection,
     ElastalkMixin

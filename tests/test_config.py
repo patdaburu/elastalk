@@ -169,3 +169,24 @@ def test_config_from_toml_001():
         ), "Blobs exclusions for the 'dogs' index should contain the global " \
            "exclusions and those configured for the index."
 
+
+def test_blob_conf_excluded_exclude():
+    """
+    Arrange: Create a `BlobConf` with a set of excluded keys.
+    Act: Added values by calling the `exclude()` method.
+    Assert: The final set of excluded keys meets the expectations.
+    """
+    blob_conf = BlobConf(excluded={'a', 'b', 'c'})
+    blob_conf.exclude('b', 'c', 'd')
+    assert blob_conf.excluded == {'a', 'b', 'c', 'd'}
+
+
+def test_blob_conf_exclude():
+    """
+    Arrange: Create a `BlobConf` without a set of excluded keys.
+    Act: Added values by calling the `exclude()` method.
+    Assert: The final set of excluded keys meets the expectations.
+    """
+    blob_conf = BlobConf()
+    blob_conf.exclude('b', 'c', 'd')
+    assert blob_conf.excluded == {'b', 'c', 'd'}
