@@ -14,7 +14,7 @@ import json
 import logging
 from typing import Any, Dict
 import elasticsearch
-from .config import ElastalkConf, ElasticsearchConfigurationException
+from .config import ElastalkConf, ElastalkConfigException
 
 
 __logger__: logging.Logger = logging.getLogger(__name__)  #: the module logger
@@ -72,7 +72,7 @@ class ElastalkConnection(object):
 
         # Create a list of the configured seed hosts.
         if not self.config.seeds:
-            raise ElasticsearchConfigurationException(
+            raise ElastalkConfigException(
                 'No seed hosts have been defined.'
             )
 
@@ -146,7 +146,7 @@ class ElastalkConnection(object):
 
         # Decode the blob and combine it with the rest of the document.
         return {
-            **{k: v for k, v in doc if k != blob_key},
+            **{k: v for k, v in doc.items() if k != blob_key},
             **_decode(blob)
         }
 

@@ -30,7 +30,7 @@ class _Defaults:
     blob_key: str = '_blob'  #: the default key for blobs
 
 
-class ElasticsearchConfigurationException(Exception):
+class ElastalkConfigException(Exception):
     """Raised when a configuration error is detected."""
 
 
@@ -104,10 +104,6 @@ class IndexConf:
             return None  # ...that's that.
         # Determine the mappings path.
         mappings_path: Path = Path(self.mappings)
-        # If a mapping document *is* defined, but the file doesn't exist...
-        if not mappings_path.exists():
-            __logger__.warning(f"{mappings_path} does not exist.")
-            return None  # ..there isn't much more we can do.
         # Figure out what the full path to the document is.
         _root = root if root else Path.cwd()
         full_path = (
@@ -115,6 +111,10 @@ class IndexConf:
             if mappings_path.is_absolute()
             else (root / mappings_path).resolve()
         )
+        # If a mapping document *is* defined, but the file doesn't exist...
+        if not full_path.exists():
+            __logger__.warning(f"{mappings_path} does not exist.")
+            return None  # ..there isn't much more we can do.
         # Read the text in the mappings document.
         return json.loads(full_path.read_text())
 
