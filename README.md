@@ -17,14 +17,13 @@ The project's documentation contains a section to help you [get started](http://
 
 To work with this project you'll need a few things.
 
-* [Python GDAL/OGR](https://pcjericks.github.io/py-gdalogr-cookbook/)
 * [GNU Make](https://www.gnu.org/software/make/)
 
 ## Resources
 
 Below are some handy resource links.
 
-* [Project Documentation](http://docs.daburu.net.s3-website.us-east-2.amazonaws.com/gc_shapehash/0.0.1/html/index.html#)
+* [Project Documentation](http://elastalk.readthedocs.io/)
 * [Click](http://click.pocoo.org/5/) is a Python package for creating beautiful command line interfaces in a composable way with as little code as necessary.
 * [Sphinx](http://www.sphinx-doc.org/en/master/) is a tool that makes it easy to create intelligent and beautiful documentation, written by Geog Brandl and licnsed under the BSD license.
 * [pytest](https://docs.pytest.org/en/latest/) helps you write better programs.
