@@ -13,11 +13,12 @@ Simple Conveniences for Talking to Elasticsearch
 
 The project's documentation contains a section to help you [get started](http://www.comingsoon.net) as a developer on the project.
 
-## Prerequisites
+## Development Prerequisites
 
-To work with this project you'll need a few things.
+If you're going to be working in the code (rather than just using the library), you'll want a few utilities.
 
 * [GNU Make](https://www.gnu.org/software/make/)
+* [Pandoc](https://pandoc.org/)
 
 ## Resources
 
