@@ -11,7 +11,9 @@ Simple Conveniences for Talking to Elasticsearch
 
 ## Getting Started
 
-The project's documentation contains a section to help you [get started](http://www.comingsoon.net) as a developer on the project.
+The project's documentation contains a section to help you 
+[get started](https://elastalk.readthedocs.io/en/latest/getting_started.html) as a developer or
+user of the library.
 
 ## Development Prerequisites
 
