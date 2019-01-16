@@ -15,3 +15,27 @@ API Documentation
     :members:
     :undoc-members:
     :show-inheritance:
+
+elastalk.config
+---------------
+
+.. automodule:: elastalk.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+elastalk.connect
+----------------
+
+.. automodule:: elastalk.connect
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+elastalk.version
+---------------
+
+.. automodule:: elastalk.version
+    :members:
+    :undoc-members:
+    :show-inheritance:
