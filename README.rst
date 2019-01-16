@@ -18,7 +18,8 @@ Getting Started
 ---------------
 
 The project's documentation contains a section to help you `get
-started <http://www.comingsoon.net>`__ as a developer on the project.
+started <https://elastalk.readthedocs.io/en/latest/getting_started.html>`__
+as a developer or user of the library.
 
 Development Prerequisites
 -------------------------

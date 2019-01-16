@@ -33,7 +33,7 @@ elastalk.connect
     :show-inheritance:
 
 elastalk.version
----------------
+----------------
 
 .. automodule:: elastalk.version
     :members:
