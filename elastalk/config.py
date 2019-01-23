@@ -230,7 +230,7 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
         key = key if key else self.blobs.key
         return key if key else _Defaults.blob_key
 
-    def from_object(self, o: str):
+    def from_object(self, o: str) -> 'ElastalkConf':
         """
         Update the configuration from an object.
 
@@ -282,7 +282,11 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
             for index in indexes.keys():
                 self.indexes[index] = IndexConf.load(indexes[index])
 
-    def from_toml(self, toml_: Path or str):
+        # Return this instance to the caller (for more fluidity in the calling
+        # code).
+        return self
+
+    def from_toml(self, toml_: Path or str) -> 'ElastalkConf':
         """
         Update the configuration from a TOML configuration.
 
@@ -319,6 +323,10 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
             value = _toml.get(att)
             if value is not None:
                 setattr(self, att, value)
+
+        # Return this instance to the caller (for more fluidity in the calling
+        # code).
+        return self
 
     def __hash__(self):
         try:

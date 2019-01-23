@@ -21,6 +21,7 @@ Simple Conveniences for Talking to `Elasticsearch <https://www.elastic.co/produc
    versions
    cli
    api
+   seed_data
    development
    requirements
 
