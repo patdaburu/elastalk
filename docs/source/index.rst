@@ -10,13 +10,15 @@
 elastalk
 ========
 
-Simple Conveniences for Talking to Elasticsearch
+Simple Conveniences for Talking to `Elasticsearch <https://www.elastic.co/products/elasticsearch>`_
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    getting_started
+   flask
+   versions
    cli
    api
    development
