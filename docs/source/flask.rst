@@ -16,6 +16,8 @@ When we built this library we figured you just might want to use it in your
 `Flask <http://flask.pocoo.org/>`_ applications.  With that in mind we've provided a
 few conveniences.
 
+.. _elastalk_flask_config_from_objects:
+
 Configuration from Objects
 --------------------------
 
@@ -32,8 +34,8 @@ Like the Flask configuration object, this configuration object supports a method
 :py:func:`from_object <elastalk.config.ElastalkConf.from_object>` that mirrors the
 behavior of the Flask method.
 
-Configuration Options
----------------------
+Options
+^^^^^^^
 
 This section describes the configuration options you can use when configuring your Elasticsearch
 settings from an object.
@@ -76,5 +78,52 @@ settings from an object.
 
 
 
+Configuration from TOML
+-----------------------
+
+In addition to :ref:`configuring from objects <elastalk_flask_config_from_objects>`, you can also
+configure `elastalk` connections using `TOML <https://pypi.org/project/toml/>`_.
+
+    TOML aims to be a minimal configuration file format that's easy to read due to obvious
+    semantics.  TOML is designed to map unambiguously to a
+    `hash table <https://en.wikipedia.org/wiki/Hash_table>`_.
+
+    -- the TOML project's `README.md <https://github.com/toml-lang/toml>`_
+
+A Sample TOML Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: ini
+
+    [blobs]
+    excluded = ["owner_", "group_"]
+
+    [indexes.cats]
+    mappings = "cats/mappings.json"
+
+    [indexes.dogs.blobs]
+    enabled = True
+    excluded = ["name", "breed"]
+
+Options
+^^^^^^^
+
+blobs
+=====
+
+This section contains global configuration options that control how, when, and which data is
+converted to binary representations (*"BLOBS"*).
+
+    :excluded: the names of attributes that are never included in binary representations when a
+        document is packed using the
+        :py:func:`ElastalkConnection.pack() <elastalk.connect.ElastalkConnection.pack>`
+        method
+
+TODO
+
+indexes
+=======
+
+TODO
 
 
