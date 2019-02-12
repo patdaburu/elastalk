@@ -35,7 +35,7 @@ To get started with Kibana, consult the
 `Kibana docs <https://www.elastic.co/guide/en/kibana/current/getting-started.html>`_.
 
 Installing the Library
-======================
+----------------------
 
 You can use pip to install `elastalk`.
 
