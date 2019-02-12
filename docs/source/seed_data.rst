@@ -75,51 +75,19 @@ represent the individual documents that will be indexed.  The name of the file w
 `id <https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-id-field.html>`_ of
 the document.
 
-.. _seed_data_special_fields:
-
-Special Fields
---------------
-
-By convention, API seed data documents will often specify an `owner_` field and a `group_` field.
-In both cases the value should be a string representation of a
-`UUID <https://en.wikipedia.org/wiki/Universally_unique_identifier>`_.  These are not part
-of the actual document but are used by applications to track stored documents.
-
-If your data doesn't need these values, just omit one or both of them.
-
-.. code-block:: python
-    :linenos:
-    :emphasize-lines: 2,3
-
-    {
-      "owner_": "3ab2b4e5-6992-43f0-851e-d1f42262cd55",
-      "group_": "5bc9ad2d-7f72-452c-b32a-d699b20d2b1f",
-      "timestamp_utc": "2018-12-10 16:36:05",
-      "location": "/input/directory/data/in/arch/data.zip",
-      "stats": {
-        "name": "data.zip",
-        "created_utc": "2018-10-12 10:56:39",
-        "modified_utc": "2018-10-12 10:49:27",
-        "size": 150044002
-      },
-      "metadata": {},
-      "data_sources": [...]
-    }
-
-
 .. _seed_data_extra_config:
 
 Extra Configuration
 -------------------
 
-You can supply additional information about the seed data in an index by supplying a `config.json`
+You can supply additional information about the seed data in an index by supplying a `config.toml`
 file in the :ref:`seed_data_indexes` directory.
 
 .. note::
 
     The :py:func:`seed <elastalk.seed.seed>` function supports a parameter called
-    `config_filename` if, for some reason, you have a reason not to call your configuration files
-    `"config.json"`.
+    `config` if, for some reason, you have a reason not to call your configuration files
+    `"config.toml"`.
 
 
 .. _seed_data_mappings:
@@ -180,38 +148,3 @@ Elasticsearch...
         }
       }
     }
-
-"Blobbing"
-^^^^^^^^^^
-
-In order to minimize database overhead, some applications may want to store non-searchable document
-content in binary form in a field called `blob` so once a document has been indexed, if you inspect
-it within the index (for example, using `Kibana <https://www.elastic.co/products/kibana>`_) you may
-notice that the only visible fields are the :ref:`special fields <seed_data_special_fields>`.
-
-If you want to store some (or all) of your seed data as a single
-`base-64 <https://www.base64decode.org/>`_ `BLOB <https://techterms.com/definition/blob>`_, you can
-add a `blobs` key to your :ref:`index configuration file <seed_data_extra_config>`.
-
-Within the `blobs` key you can supply two directives:
-
-    :enabled: *(bool)* `true` to convert seed data to BLOBs
-
-    :exclude: *(list)* a list of top-level keys in your seed data document that should not be
-        included in the BLOB
-
-.. code-block:: javascript
-
-    {
-      "blobs": {
-        "enabled": true,
-        "exclude": [
-          "firstName",
-          "lastName"
-        ]
-      }
-    }
-
-.. note::
-
-    :ref:`seed_data_special_fields` are always excluded from BLOBs.

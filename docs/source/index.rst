@@ -17,11 +17,13 @@ Simple Conveniences for Talking to `Elasticsearch <https://www.elastic.co/produc
    :caption: Contents:
 
    getting_started
+   configuration
+   seed_data
+   blobbing
    flask
    versions
    cli
    api
-   seed_data
    development
    requirements
 
