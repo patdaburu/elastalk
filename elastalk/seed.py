@@ -76,7 +76,6 @@ def seed(root: str or Path,
             for docfile in [f for f in docdir.iterdir() if f.is_file()]:
                 # What do we thing the document ID should be?
                 _id = docfile.name
-                print(_id)
                 # If it is convertible to a UUID, it's a UUID...
                 try:
                     _id = uuid.UUID(_id)
@@ -91,8 +90,3 @@ def seed(root: str or Path,
                     id=_id,
                     body=etconn.pack(doc=doc, index=_index)
                 )
-
-
-
-    # TODO: Pick it up here!
-
