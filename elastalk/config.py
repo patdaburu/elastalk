@@ -244,7 +244,7 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
         cls = getattr(mod, name_parts[-1])
 
         # Retrieve the hosts (if there are any).
-        es_hosts = getattr(cls, 'ES_HOSTS', None)
+        es_hosts = getattr(cls, 'ES_HOSTS', self.seeds)
         # The seeds might already be a list (if they're defined in code) or
         # they might be expressed as a comma-separated list.  We'll account
         # for both...
@@ -299,6 +299,16 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
             if isinstance(toml_, Path)
             else toml_
         )
+
+        # Retrieve the hosts (if there are any).
+        _seeds = getattr(_toml, 'seeds', self.seeds)
+        # The seeds might already be a list (if they're defined in code) or
+        # they might be expressed as a comma-separated list.  We'll account
+        # for both...
+        self.seeds = [
+            h.strip() for h in _seeds.split(',')
+        ] if isinstance(_seeds, str) else list(_seeds)
+
         # Let's see if there are any blobbing directives.
         blobs = BlobConf.load(_toml.get('blobs'))
         # If there are...
