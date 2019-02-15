@@ -32,6 +32,14 @@ elastalk.connect
     :undoc-members:
     :show-inheritance:
 
+elastalk.seed
+-------------
+
+.. automodule:: elastalk.seed
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 elastalk.version
 ----------------
 
