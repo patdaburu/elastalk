@@ -107,7 +107,7 @@ def test_client_set_config():
     cfg1 = ElastalkConf(seeds=['127.0.0.1'])
     es_cnx = ElastalkConnection(config=cfg1)
     es1 = es_cnx.client
-    cfg2 = ElastalkConf(seeds=['test.geo-comm.com'])
+    cfg2 = ElastalkConf(seeds=['test.daburu.net'])
     es_cnx.config = cfg2
     es2 = es_cnx.client
 

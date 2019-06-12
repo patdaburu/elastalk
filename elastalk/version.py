@@ -8,5 +8,5 @@
 This module contains project version information.
 """
 
-__version__ = '6.5.2'  #: the working version
-__release__ = '6.5.2'  #: the release version
+__version__ = '6.5.2.1'  #: the working version
+__release__ = '6.5.2.1'  #: the release version

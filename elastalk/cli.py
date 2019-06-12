@@ -32,7 +32,8 @@ LOGGING_LEVELS = {
 
 class Info(object):
     """
-    This is an information object that can be used to pass data between CLI functions.
+    This is an information object that can be used to pass data between CLI
+    functions.
     """
     def __init__(self):  # Note that this object must have an empty constructor.
         self.verbose: int = 0
@@ -71,14 +72,6 @@ def cli(info: Info,
             )
         )
     info.verbose = verbose
-
-@cli.command()
-@pass_info
-def hello(_: Info):
-    """
-    Say 'hello' to the nice people.
-    """
-    click.echo(f"elastalk says 'hello'")
 
 
 @cli.command()
