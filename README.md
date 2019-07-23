@@ -39,7 +39,7 @@ Below are some handy resource links.
 
 See also the list of [contributors](https://github.com/patdaburu/elastalk/contributors) who participated in this project.
 
-## LicenseMIT License
+## MIT License
 
 Copyright (c) patdaburu
 
