@@ -230,7 +230,7 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
         key = key if key else self.blobs.key
         return key if key else _Defaults.blob_key
 
-    def from_object(self, o: str):
+    def from_object(self, o: str) -> 'ElastalkConf':
         """
         Update the configuration from an object.
 
@@ -244,7 +244,7 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
         cls = getattr(mod, name_parts[-1])
 
         # Retrieve the hosts (if there are any).
-        es_hosts = getattr(cls, 'ES_HOSTS', None)
+        es_hosts = getattr(cls, 'ES_HOSTS', self.seeds)
         # The seeds might already be a list (if they're defined in code) or
         # they might be expressed as a comma-separated list.  We'll account
         # for both...
@@ -282,7 +282,11 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
             for index in indexes.keys():
                 self.indexes[index] = IndexConf.load(indexes[index])
 
-    def from_toml(self, toml_: Path or str):
+        # Return this instance to the caller (for more fluidity in the calling
+        # code).
+        return self
+
+    def from_toml(self, toml_: Path or str) -> 'ElastalkConf':
         """
         Update the configuration from a TOML configuration.
 
@@ -295,6 +299,16 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
             if isinstance(toml_, Path)
             else toml_
         )
+
+        # Retrieve the hosts (if there are any).
+        _seeds = getattr(_toml, 'seeds', self.seeds)
+        # The seeds might already be a list (if they're defined in code) or
+        # they might be expressed as a comma-separated list.  We'll account
+        # for both...
+        self.seeds = [
+            h.strip() for h in _seeds.split(',')
+        ] if isinstance(_seeds, str) else list(_seeds)
+
         # Let's see if there are any blobbing directives.
         blobs = BlobConf.load(_toml.get('blobs'))
         # If there are...
@@ -319,6 +333,10 @@ class ElastalkConf:  # pylint: disable=unsubscriptable-object, unsupported-assig
             value = _toml.get(att)
             if value is not None:
                 setattr(self, att, value)
+
+        # Return this instance to the caller (for more fluidity in the calling
+        # code).
+        return self
 
     def __hash__(self):
         try:

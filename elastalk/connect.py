@@ -33,9 +33,7 @@ class ElastalkConnection(object):
             config if config else ElastalkConf()
         )  #: the configuration
         # The Elasticsearch client will be created on demand.
-        self._client: elasticsearch.Elasticsearch = (
-            None
-        )  #: the Elasticsearch client
+        self._client: elasticsearch.Elasticsearch or None = None
 
     @property
     def config(self) -> ElastalkConf:
@@ -188,7 +186,7 @@ def _encode(doc: Dict) -> str:
     return enc_ascii.decode('utf-8')
 
 
-def _decode(encoded: str) -> Dict:
+def _decode(encoded: bytes) -> Dict:
     """
     Decode an dictionary (document) encoded as a base64-encoded string.
 
@@ -201,7 +199,7 @@ def _decode(encoded: str) -> Dict:
     return json.loads(dec_bytes.decode('utf-8'))
 
 
-class ElastalkMixin(object):
+class ElastalkMixin:
     """
     Mix this into your class to get easy access to the Elasticsearch client.
     """
