@@ -12,10 +12,12 @@ This module contains functions you can use when dealing with
 from typing import Any, Iterable, Mapping, Tuple
 import uuid
 
+ID_FIELD = '_id'  #: the standard name of the ID field
+
 
 def extract_hit(
         hit: Mapping[str, Any],
-        includes: Tuple[str] = ('_id',),  # TODO: _id should be a constant
+        includes: Tuple[str] = (ID_FIELD,),
         source: str = '_source'
 ) -> Mapping[str, Any]:
     """
@@ -29,19 +31,19 @@ def extract_hit(
     doc = {
         **{
             k: hit.get(k) for k in includes
-          },
+        },
         **hit.get(source)
     }
     # If the document ID is included...
-    if '_id' in doc:
+    if ID_FIELD in doc:
         # ...convert it to a UUID.
-        doc['_id'] = uuid.UUID(doc.get('_id'))
+        doc[ID_FIELD] = uuid.UUID(doc.get(ID_FIELD))
     return doc
 
 
 def extract_hits(
         result: Mapping[str, Any],
-        includes: Tuple[str] = ('_id',),  # TODO: _id should be a constant
+        includes: Tuple[str] = (ID_FIELD,),
         source: str = '_source'
 ) -> Iterable[Mapping[str, Any]]:
     """
