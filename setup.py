@@ -60,7 +60,7 @@ setup(
     [console_scripts]
     elastalk=elastalk.cli:cli
     """,
-    python_requires=">=0.0.1",
+    python_requires=">=3.6",
     license='MIT',
     author='Pat Daburu',
     author_email='pat@daburu.net',

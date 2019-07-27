@@ -57,8 +57,8 @@ See also the list of
 `contributors <https://github.com/patdaburu/elastalk/contributors>`__
 who participated in this project.
 
-LicenseMIT License
-------------------
+MIT License
+-----------
 
 Copyright (c) patdaburu
 
